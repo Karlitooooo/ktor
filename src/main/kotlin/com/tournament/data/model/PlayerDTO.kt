@@ -1,8 +1,5 @@
 package com.tournament.data.model
 
-data class Player(
+data class PlayerDTO(
     val pseudo: String,
-    val points: Number
 )
-
-
