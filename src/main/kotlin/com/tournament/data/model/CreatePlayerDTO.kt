@@ -1,5 +1,5 @@
 package com.tournament.data.model
 
-data class PlayerDTO(
+data class CreatePlayerDTO(
     val pseudo: String,
 )
