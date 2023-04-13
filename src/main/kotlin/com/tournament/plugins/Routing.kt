@@ -30,5 +30,10 @@ fun Application.configureRouting() {
             database.getCollection<Player>().insertOne(Player(pseudo = payload.pseudo, points = 0))
             call.response.status(HttpStatusCode.Created)
         }
+        delete("/players") {
+            val col = database.getCollection<Player>()
+            col.deleteMany()
+            call.response.status(HttpStatusCode.NoContent)
+        }
     }
 }
