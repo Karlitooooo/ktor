@@ -3,6 +3,7 @@ package com.tournament.plugins
 import com.tournament.data.database
 import com.tournament.data.model.Player
 import com.tournament.data.model.PlayerDTO
+import com.tournament.data.model.UpdatePlayerDto
 import io.ktor.http.*
 import io.ktor.server.routing.*
 import io.ktor.server.response.*
@@ -25,9 +26,15 @@ fun Application.configureRouting() {
 
             call.respond(players)
         }
+        put("/players/{id}") {
+            val col = database.getCollection<Player>()
+            val payload  = call.receive<UpdatePlayerDto>()
+            val response = col.updateOne(Player::_id eq call.parameters["id"], setValue(Player::points, payload.points))
+            call.response.status(HttpStatusCode.NoContent)
+        }
         post("/players") {
             val payload  = call.receive<PlayerDTO>()
-            database.getCollection<Player>().insertOne(Player(pseudo = payload.pseudo, points = 0))
+            database.getCollection<Player>().insertOne(Player(pseudo = payload.pseudo, points = 0));
             call.response.status(HttpStatusCode.Created)
         }
         delete("/players") {
