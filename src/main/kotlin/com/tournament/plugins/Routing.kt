@@ -9,5 +9,4 @@ fun Application.configureRouting() {
     routing {
         playerRoutes()
     }
-
 }

@@ -2,9 +2,6 @@ package com.tournament.data.model
 
 import org.bson.types.ObjectId
 
-
-
-// extends players
 data class PlayerWithRank(
     var _id: String = ObjectId().toString(),
     val pseudo: String,
