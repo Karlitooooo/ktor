@@ -1,49 +1,49 @@
 package com.tournament.routes
 
-import com.tournament.data.database
 import com.tournament.data.model.CreatePlayerDTO
-import com.tournament.data.model.Player
 import com.tournament.data.model.PlayerWithRank
 import com.tournament.data.model.UpdatePlayerDTO
-import com.tournament.data.repository.PlayerRepository
+import com.tournament.data.repository.PlayerRepositoryImpl
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import org.litote.kmongo.*
+import org.koin.ktor.ext.inject
 
 
 fun Route.playerRoutes() {
-    val playerRepository = PlayerRepository()
+  val playerRepository by inject<PlayerRepositoryImpl>()
 
-    get("/players") {
-        val players = playerRepository.findAllSorted()
-        call.respond(players)
+  route("/players") {
+    get() {
+      val players = playerRepository.findAllSorted()
+      call.respond(players)
     }
-    get("/players/{id}") {
-        val players = playerRepository.findAllSorted()
+    get("/{id}") {
+      val players = playerRepository.findAllSorted()
 
-        val index = players.indexOfFirst { player -> player._id == call.parameters["id"] }
+      val index = players.indexOfFirst { player -> player._id == call.parameters["id"] }
 
-        if(index == -1) return@get call.response.status(HttpStatusCode.NotFound)
+      if (index == -1) return@get call.response.status(HttpStatusCode.NotFound)
 
-        val player = players[index]
+      val (_id, pseudo, points) = players[index]
 
-        call.respond(PlayerWithRank(pseudo = player.pseudo, points = player.points, _id = player._id, rank = index + 1 ))
+      call.respond(PlayerWithRank(pseudo = pseudo, points = points, _id = _id, rank = index + 1))
     }
-    patch("/players/{id}") {
-        val payload = call.receive<UpdatePlayerDTO>()
-        val response = playerRepository.updatePoints(call.parameters["id"], payload.points)
-        call.response.status(HttpStatusCode.NoContent)
+    patch("/{id}") {
+      val (points) = call.receive<UpdatePlayerDTO>()
+      playerRepository.updatePoints(call.parameters["id"], points)
+      call.response.status(HttpStatusCode.NoContent)
     }
-    post("/players") {
-        val payload = call.receive<CreatePlayerDTO>()
-        playerRepository.addPlayer(payload.pseudo)
-        call.response.status(HttpStatusCode.Created)
+    post() {
+      val (pseudo) = call.receive<CreatePlayerDTO>()
+      val player = playerRepository.addPlayer(pseudo) ?: return@post call.response.status(HttpStatusCode.NoContent)
+      call.respond(player)
     }
-    delete("/players") {
-        playerRepository.deleteAll();
-        call.response.status(HttpStatusCode.NoContent)
+    delete() {
+      playerRepository.deleteAll();
+      call.response.status(HttpStatusCode.NoContent)
     }
+  }
 }

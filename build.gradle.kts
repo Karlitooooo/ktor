@@ -4,6 +4,7 @@ val logback_version: String by project
 val koin_ktor: String by project
 
 plugins {
+    application
     kotlin("jvm") version "1.8.20"
     id("io.ktor.plugin") version "2.2.4"
 }
@@ -34,4 +35,6 @@ dependencies {
     implementation("io.github.cdimascio:dotenv-kotlin:6.4.1")
     implementation("io.insert-koin:koin-ktor:$koin_ktor")
     implementation("io.insert-koin:koin-logger-slf4j:$koin_ktor")
+    implementation("io.ktor:ktor-server-cors:$ktor_version")
+
 }
