@@ -1,11 +1,12 @@
-package com.tournament.data.model
+package com.tournament.domain.models
 
 import org.bson.types.ObjectId
 
-data class Player(
+data class PlayerWithRank(
   var _id: String = ObjectId().toString(),
   val pseudo: String,
   val points: Number,
+  val rank: Int
 )
 
 

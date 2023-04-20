@@ -17,4 +17,3 @@ Le service devra s'initialiser et se lancer par un script bash.
 
 Bonus :  
 Fournir une interface d'administration (une UI) permettant de visualiser les joueurs présents dans l'application; en Angular.
-URL front: https://github.com/Karlitooooo/tournament-angular
